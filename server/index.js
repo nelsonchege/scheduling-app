@@ -70,6 +70,23 @@ app.post("/schedule/create", (req, res) => {
   res.json({ message: "OK" });
 });
 
+app.get("/schedules/:id", (req, res) => {
+  const { id } = req.params;
+  //👇🏻 filters the array via the ID
+  let result = database.filter((db) => db.id === id);
+  //👇🏻 returns the schedule, time and username
+  if (result.length === 1) {
+    return res.json({
+      message: "Schedules successfully retrieved!",
+      schedules: result[0].schedule,
+      username: result[0].username,
+      timezone: result[0].timezone,
+    });
+  }
+  //👇🏻 if user not found
+  return res.json({ error_message: "Sign in again, an error occured..." });
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
