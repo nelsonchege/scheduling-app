@@ -132,3 +132,37 @@ export function fetchBookingDetails(
     })
     .catch((err) => console.error(err));
 }
+
+import emailjs from "@emailjs/browser";
+
+export const sendEmail = (
+  receiverEmail: any,
+  email: any,
+  fullName: any,
+  message: any,
+  duration: any
+) => {
+  emailjs
+    .send(
+      "YOUR_SERVICE_ID",
+      "YOUR_TEMPLATE_ID",
+      {
+        to_email: receiverEmail,
+        from_email: email,
+        fullName,
+        message,
+        duration,
+      },
+      "YOUR_PUBLIC_KEY"
+    )
+    .then(
+      (result) => {
+        console.log(result.text);
+        toast.success("Session booked successfully!");
+      },
+      (error) => {
+        console.log(error.text);
+        toast.error(error.text);
+      }
+    );
+};

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchBookingDetails } from "../utils/resource";
+import { fetchBookingDetails, sendEmail } from "../utils/resource";
 import ErrorPage from "./ErrorPage";
 
 const BookUser = () => {
@@ -15,7 +15,7 @@ const BookUser = () => {
   //👇🏻 logs the user's details to the console
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(email, fullName, message);
+    sendEmail(receiverEmail, email, fullName, message, duration);
     setFullName("");
     setMessage("");
   };
