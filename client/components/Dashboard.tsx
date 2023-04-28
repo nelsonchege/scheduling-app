@@ -1,8 +1,8 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TimezoneSelect from "react-timezone-select";
 import { toast } from "react-toastify";
-import { time } from "../utils/resource";
+import { handleCreateSchedule, time } from "../utils/resource";
 
 export default function Dashboard() {
   const [selectedTimezone, setSelectedTimezone] = useState({});
@@ -15,12 +15,6 @@ export default function Dashboard() {
     { day: "Fri", startTime: "", endTime: "" },
     { day: "Sat", startTime: "", endTime: "" },
   ]);
-
-  useEffect(() => {
-    if (!localStorage.getItem("_id")) {
-      navigate("/");
-    }
-  }, [navigate]);
   //👇🏻 This updates the schedule array with the start and end time.
   const handleTimeChange = (e: ChangeEvent<HTMLSelectElement>, id: number) => {
     const { name, value } = e.target;
@@ -31,8 +25,9 @@ export default function Dashboard() {
   };
   //👇🏻 Logs the user's schedule to the console after setting the availability
   const handleSaveSchedules = () => {
+    //👇🏻 ensures the user's timezone has been selected
     if (JSON.stringify(selectedTimezone) !== "{}") {
-      console.log(schedule);
+      handleCreateSchedule(selectedTimezone, schedule, navigate);
     } else {
       toast.error("Select your timezone");
     }

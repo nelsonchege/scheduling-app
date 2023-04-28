@@ -60,6 +60,16 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.post("/schedule/create", (req, res) => {
+  const { userId, timezone, schedule } = req.body;
+  //👇🏻 filters the database via the id
+  let result = database.filter((db) => db.id === userId);
+  //👇🏻 updates the user's schedule and timezone
+  result[0].timezone = timezone;
+  result[0].schedule = schedule;
+  res.json({ message: "OK" });
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
