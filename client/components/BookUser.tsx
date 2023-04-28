@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { fetchBookingDetails } from "../utils/resource";
+import ErrorPage from "./ErrorPage";
 
 const BookUser = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [schedules, setSchedules] = useState([]);
+  const [timezone, setTimezone] = useState("");
+  const [error, setError] = useState(false);
+  const [receiverEmail, setReceiverEmail] = useState("");
   const { user } = useParams();
   //👇🏻 logs the user's details to the console
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -13,6 +19,22 @@ const BookUser = () => {
     setFullName("");
     setMessage("");
   };
+  useEffect(() => {
+    fetchBookingDetails(
+      user,
+      setError,
+      setTimezone,
+      setSchedules,
+      setReceiverEmail
+    );
+  }, [user]);
+  if (error) {
+    return <ErrorPage error="User doesn't exist" />;
+  }
+  function setDuration(value: string): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="bookContainer">
       <h2 className="bookTitle">Book a session with {user}</h2>
@@ -46,6 +68,14 @@ const BookUser = () => {
         <label htmlFor="session">
           Select your preferred session - GMT+2 Jerusalem
         </label>
+        <select name="duration" onChange={(e) => setDuration(e.target.value)}>
+          {schedules.map((schedule) => (
+            <option
+              value={`${schedule.day} - ${schedule.startTime} : ${schedule.endTime}`}
+              key={schedule.day}
+            >{`${schedule.day} - ${schedule.startTime} : ${schedule.endTime}`}</option>
+          ))}
+        </select>
         <button className="bookingBtn">SEND</button>
       </form>
     </div>

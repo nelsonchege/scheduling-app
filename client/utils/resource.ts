@@ -101,3 +101,34 @@ export async function handleCreateSchedule(
     console.error(err);
   }
 }
+
+export function fetchBookingDetails(
+  user: any,
+  setError: any,
+  setTimezone: any,
+  setSchedules: any,
+  setReceiverEmail: any
+) {
+  fetch(`http://localhost:4000/schedules/${user}`, {
+    method: "POST",
+    body: JSON.stringify({
+      username: user,
+    }),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.error_message) {
+        toast.error(data.error_message);
+        setError(true);
+      } else {
+        setTimezone(data.timezone.label);
+        setSchedules(data.schedules);
+        setReceiverEmail(data.receiverEmail);
+      }
+    })
+    .catch((err) => console.error(err));
+}

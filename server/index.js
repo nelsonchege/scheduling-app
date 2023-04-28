@@ -87,6 +87,25 @@ app.get("/schedules/:id", (req, res) => {
   return res.json({ error_message: "Sign in again, an error occured..." });
 });
 
+app.post("/schedules/:username", (req, res) => {
+  const { username } = req.body;
+  //👇🏻 filter the databse via the username
+  let result = database.filter((db) => db.username === username);
+  if (result.length === 1) {
+    const scheduleArray = result[0].schedule;
+    //👇🏻 return only the selected schedules
+    const filteredArray = scheduleArray.filter((sch) => sch.startTime !== "");
+    //return the schedules and other information
+    return res.json({
+      message: "Schedules successfully retrieved!",
+      schedules: filteredArray,
+      timezone: result[0].timezone,
+      receiverEmail: result[0].email,
+    });
+  }
+  return res.json({ error_message: "User doesn't exist" });
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
