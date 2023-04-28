@@ -1,14 +1,17 @@
 import { useState } from "react";
+import { handleLogin } from "../utils/resource";
 import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  //👇🏻 The Login button function
   const handleSubmit = (e: { preventDefault: () => void }) => {
     if (username.trim() && password.trim()) {
       e.preventDefault();
-      console.log({ username, password });
+      //👇🏻 accepts the user's password and email
+      handleLogin(username, password, navigate);
       setPassword("");
       setUsername("");
     }
