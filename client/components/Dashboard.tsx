@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TimezoneSelect from "react-timezone-select";
 import { toast } from "react-toastify";
@@ -6,6 +6,7 @@ import { handleCreateSchedule, time } from "../utils/resource";
 
 export default function Dashboard() {
   const [selectedTimezone, setSelectedTimezone] = useState({});
+  const navigate = useNavigate();
   const [schedule, setSchedule] = useState([
     { day: "Sun", startTime: "", endTime: "" },
     { day: "Mon", startTime: "", endTime: "" },
@@ -15,6 +16,12 @@ export default function Dashboard() {
     { day: "Fri", startTime: "", endTime: "" },
     { day: "Sat", startTime: "", endTime: "" },
   ]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("_id")) {
+      navigate("/");
+    }
+  }, [navigate]);
   //👇🏻 This updates the schedule array with the start and end time.
   const handleTimeChange = (e: ChangeEvent<HTMLSelectElement>, id: number) => {
     const { name, value } = e.target;
@@ -32,11 +39,17 @@ export default function Dashboard() {
       toast.error("Select your timezone");
     }
   };
+  const handleLogout = () => {
+    localStorage.removeItem("_id");
+    localStorage.removeItem("_myEmail");
+    navigate("/");
+  };
+
   return (
     <div>
       <nav className="dashboard__nav">
         <h2>BookMe</h2>
-        <button onClick={() => {}} className="logout__btn">
+        <button onClick={handleLogout} className="logout__btn">
           Log out
         </button>
       </nav>

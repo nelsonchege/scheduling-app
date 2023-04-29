@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const PORT = 4000;
@@ -6,6 +7,11 @@ const PORT = 4000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const corsOptions = {
+  origin: "http://localhost:5173",
+};
+
+app.use(cors(corsOptions));
 //👇🏻 array representing the data
 const database = [];
 //👇🏻 generates a random string as ID
